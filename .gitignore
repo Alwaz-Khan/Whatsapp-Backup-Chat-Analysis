@@ -3,3 +3,4 @@ main.py
 .idea/
 WhatsApp Chat with Alwaz.txt
 To Do Tomorrow.txt
+*.pyc

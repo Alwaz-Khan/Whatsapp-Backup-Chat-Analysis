@@ -1,7 +1,7 @@
 from pprint import pprint
 import matplotlib.pyplot as plt
 
-threshold_value = 0.001
+threshold_value = 0.003
 
 
 def load_data(filepath):
@@ -42,9 +42,22 @@ def word_count(data):
         full_line = value["Message"]
         list_of_words = full_line.split()
         for word in list_of_words:
+            word = word.replace("'","")
             word = word.lower()
             histo[word] = histo.get(word, 0) + 1
     return list(histo.items())
+
+
+def common_word_filter(histo):
+    common_words_list = []
+    new_list = []
+    with open("20k.txt") as common_word_list:
+        for line in common_word_list:
+            common_words_list.append(line.strip())
+        for position in histo:
+            if position[0] not in common_words_list:
+                new_list.append(position)
+    return new_list
 
 
 def filter_data(histo):
@@ -78,6 +91,7 @@ def plot_graph(histo):
 def main():
     data = load_data("WhatsApp Chat with Alwaz.txt")
     histo = word_count(data)
+    histo = common_word_filter(histo)
     histo = filter_data(histo)
     plot_graph(histo)
 
