@@ -47,20 +47,42 @@ def word_count(data):
             histo[word] = histo.get(word, 0) + 1
     return list(histo.items())
 
+def words_only_filter(histo):
+    new_list = []
+    for word_frequency in histo:
+        word = word_frequency[0]
+        new_list.append(word_frequency)
+        for letter in word:
+            if (ord(letter) < 65) or (90 < ord(letter) < 97) or (ord(letter) > 122):
+                del new_list[-1]
+                break
+    return new_list
 
-def common_word_filter(histo):
+# # Adam's Approach
+# def words_only_filter():
+#   return [wf for wf in histo if wf[0].isalpha()]
+
+
+
+def common_word_filter(histo,file):
+    """
+
+    :param histo: takes
+    :param file:
+    :return:
+    """
     common_words_list = []
     new_list = []
-    with open("20k.txt") as common_word_list:
+    with open(file) as common_word_list:
         for line in common_word_list:
             common_words_list.append(line.strip())
-        for position in histo:
-            if position[0] not in common_words_list:
-                new_list.append(position)
+        for word_frequency in histo:
+            if word_frequency[0] not in common_words_list:
+                new_list.append(word_frequency)
     return new_list
 
 
-def filter_data(histo):
+def reduce_sample(histo):
     """
     Takes a list of tuples containing word and frequency at each position of list, ranks the  tuples in order of highest
     frequency, and then selects an x percentage of words from the top and returns the modified list of tuples
@@ -91,10 +113,15 @@ def plot_graph(histo):
 def main():
     data = load_data("WhatsApp Chat with Alwaz.txt")
     histo = word_count(data)
-    histo = common_word_filter(histo)
-    histo = filter_data(histo)
+    histo= words_only_filter(histo)
+    histo = common_word_filter(histo, "20k.txt")
+    histo = common_word_filter(histo, "Manual Words List.txt")
+    histo = reduce_sample(histo)
     plot_graph(histo)
 
 
 if __name__ == '__main__':
     main()
+
+
+
